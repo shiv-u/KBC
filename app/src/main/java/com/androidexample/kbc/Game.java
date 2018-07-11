@@ -83,6 +83,7 @@ public class Game extends AppCompatActivity {
          mediaPlayer.start();
          name = getIntent().getExtras().getString("name");
          play();
+         //TODO: add firebase as database for the data as soon as possible.
 
 
 
