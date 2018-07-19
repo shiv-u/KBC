@@ -21,11 +21,11 @@ public class eliminated extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eliminated);
         String name = getIntent().getExtras().getString("name");
-        MediaPlayer mediaPlayer = MediaPlayer.create(eliminated.this,R.raw.wrong);
+        MediaPlayer mediaPlayer = MediaPlayer.create(eliminated.this, R.raw.wrong);
         mediaPlayer.start();
         TextView textView = findViewById(R.id.textView);
-        textView.setText("Sorry "+name+" you are ");
-        quit=findViewById(R.id.quit);
+        textView.setText("Sorry " + name + " you are ");
+        quit = findViewById(R.id.quit);
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,40 +45,23 @@ public class eliminated extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
 
-                          finish();
+                        finish();
 
-                          moveTaskToBack(true);
+                        moveTaskToBack(true);
                         System.exit(0);
-
-
 
 
                     }
                 });
-                    builder.show();
+                builder.show();
             }
         });
 
 
-
     }
 
-//
-//    @Override
-//    protected void onDestroy() {
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                Process.killProcess(Process.myPid());
-//
-//            }
-//        },SPLASH_TIME_OUT);
-//        super.onDestroy();
-//    }
-    public void play_again(View view)
-    {
-        Intent intent = new Intent(this,Game.class);
+    public void play_again(View view) {
+        Intent intent = new Intent(this, Game.class);
         startActivity(intent);
     }
 }

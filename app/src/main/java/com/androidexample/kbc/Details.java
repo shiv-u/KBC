@@ -24,19 +24,19 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-    /* Choose an image from Gallery */
+
     void openImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
-    public void game(View view)
-    {
-        Intent intent = new Intent(this,Game.class);
+
+    public void game(View view) {
+        Intent intent = new Intent(this, Game.class);
         EditText textView = findViewById(R.id.name);
 
-        intent.putExtra("name",textView.getText().toString());
+        intent.putExtra("name", textView.getText().toString());
         startActivity(intent);
     }
 
@@ -56,7 +56,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    /* Get the real path from the URI */
+
     public String getPathFromURI(Uri contentUri) {
         String res = null;
         String[] proj = {MediaStore.Images.Media.DATA};

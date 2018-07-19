@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class Won extends AppCompatActivity {
 
     Button quit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,9 +21,9 @@ public class Won extends AppCompatActivity {
         String name = getIntent().getExtras().getString("name");
         TextView textView = findViewById(R.id.name);
         textView.setText(name);
-        MediaPlayer song = MediaPlayer.create(Won.this,R.raw.win);
+        MediaPlayer song = MediaPlayer.create(Won.this, R.raw.win);
         song.start();
-        quit=findViewById(R.id.quit);
+        quit = findViewById(R.id.quit);
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,13 +42,9 @@ public class Won extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-
                         finish();
-
                         moveTaskToBack(true);
                         System.exit(0);
-
-
 
 
                     }
@@ -57,11 +54,10 @@ public class Won extends AppCompatActivity {
         });
 
 
-
     }
-    public void play_again(View view)
-    {
-        Intent intent = new Intent(this,Game.class);
+
+    public void play_again(View view) {
+        Intent intent = new Intent(this, Game.class);
         startActivity(intent);
     }
 }

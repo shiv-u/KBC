@@ -20,10 +20,6 @@ public class VerticalStepperAdapterDemoFragment extends Fragment implements ISte
 
 	private VerticalStepperView mVerticalStepperView;
 
-//	@Override
-//	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-//		return inflater.inflate(R.layout.fragment_vertical_stepper_adapter, parent, false);
-//	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {

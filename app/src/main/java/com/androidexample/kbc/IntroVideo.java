@@ -11,17 +11,18 @@ import android.widget.VideoView;
 
 public class IntroVideo extends AppCompatActivity {
     VideoView videoView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_into_video);
 
-        String videopath="android.resource://com.androidexample.kbc/"+R.raw.intro;
-        videoView= findViewById(R.id.video_view);
-        MediaController mediaController=new MediaController(this);
+        String videopath = "android.resource://com.androidexample.kbc/" + R.raw.intro;
+        videoView = findViewById(R.id.video_view);
+        MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
-        Uri uri=Uri.parse(videopath);
+        Uri uri = Uri.parse(videopath);
         videoView.setVideoURI(uri);
         videoView.requestFocus();
         videoView.start();
@@ -32,14 +33,14 @@ public class IntroVideo extends AppCompatActivity {
             }
         });
     }
-    public void next()
-    {
-        Intent intent=new Intent(this,Instructions.class);
+
+    public void next() {
+        Intent intent = new Intent(this, Instructions.class);
         startActivity(intent);
     }
-    public void instructions(View view)
-    {
-        Intent intent=new Intent(this,Instructions.class);
+
+    public void instructions(View view) {
+        Intent intent = new Intent(this, Instructions.class);
         startActivity(intent);
     }
 }

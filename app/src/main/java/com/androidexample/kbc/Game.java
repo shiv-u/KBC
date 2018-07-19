@@ -13,20 +13,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import java.util.ArrayList;
+
+import static com.androidexample.kbc.R.drawable.red;
 
 public class Game extends AppCompatActivity {
 
-    int questionno = 0, totalquestions = 0, chances = 1,next=1000;
-    double SPLASH_TIME_OUT=0.999;
+    int questionno = 0, totalquestions = 0, chances = 1, next = 1000;
+    double SPLASH_TIME_OUT = 0.999;
+    private static final String KEY_QUESTION_NO = "Question";
+    private static final String KEY_FIFTY_FIFTY = "fifty";
+    private static final String KEY_DIP = "dip";
+    private static  final String FIFTY_BUTTONS = "fifty_buttons";
+    private static  final String DIP_BUTTONS = "dip_buttons";
+    private boolean savedInstance= false;
 
+    private ArrayList<Integer> disabled;
     boolean quizover = false;
     TextView questiontext;
     TextView question;
-    Button button1 ;
-    Button button2 ;
-    Button button3 ;
+    Button button1;
+    Button button2;
+    Button button3;
     Button button4;
     ArrayList<Button> button = new ArrayList<>();
     MediaPlayer mediaPlayer;
@@ -49,8 +57,8 @@ public class Game extends AppCompatActivity {
             {"Mumbai", "Kolkata", "Delhi", "Bengaluru"},
             {"Vivekananda", "Basavanna", "Gandhi", "Chanakya"},
             {"Kannada", "Tamil", "Hindi", "Bengali"},
-            {"Geet Sethi", "Michael Ferreira", "Subhash Agarwal","Pankaj Advani"},
-            {"Satyajit Ray","Shyam Benegal","Shankar Nag", "Mani Ratnam"},
+            {"Geet Sethi", "Michael Ferreira", "Subhash Agarwal", "Pankaj Advani"},
+            {"Satyajit Ray", "Shyam Benegal", "Shankar Nag", "Mani Ratnam"},
             {"R.K.Narayan", "R.K.Laxman", "Mario Miranda", "Kutty"}};
     int[][] answers = {{1, 1}, {2, 3}, {3, 2}, {4, 1}, {5, 4}, {6, 2}, {7, 1}, {8, 4}, {9, 3}, {10, 2}};
 
@@ -61,50 +69,88 @@ public class Game extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("game","error");
-        questionno=0;
+        Log.i("game", "error");
+        questionno = 0;
+        disabled = new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         questiontext = findViewById(R.id.question_no);
         question = findViewById(R.id.question);
         totalquestions = questions.length;
-        button1=findViewById(R.id.button1);
-        button2=findViewById(R.id.button2);
-        button3=findViewById(R.id.button3);
-        button4=findViewById(R.id.button4);
-        fifty=findViewById(R.id.fifty);
-        doubledip=findViewById(R.id.doubledip);
+        button1 = findViewById(R.id.button1);
+        button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
+        button4 = findViewById(R.id.button4);
+        fifty = findViewById(R.id.fifty);
+        doubledip = findViewById(R.id.doubledip);
         button.add(button1);
         button.add(button2);
         button.add(button3);
         button.add(button4);
-         mediaPlayer = MediaPlayer.create(Game.this,R.raw.game);
-         mediaPlayer.setLooping(true);
-         mediaPlayer.start();
-         name = getIntent().getExtras().getString("name");
-         play();
-         //TODO: add firebase as database for the data as soon as possible.
+        mediaPlayer = MediaPlayer.create(Game.this, R.raw.game);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+        name = getIntent().getExtras().getString("name");
+
+        if (savedInstanceState != null) {
+            questionno = savedInstanceState.getInt(KEY_QUESTION_NO);
+            lifeline1 = savedInstanceState.getBoolean(KEY_FIFTY_FIFTY);
+
+            disabled = savedInstanceState.getIntegerArrayList(FIFTY_BUTTONS);
+            if (!lifeline1) {
+                fifty.setImageResource(R.drawable.redfifty);
+                fifty.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+
+            } else {
+                fifty.setImageResource(R.drawable.fifty);
+                fifty.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+
+
+            }
+
+            mediaPlayer.start();
+        }
+        play();
 
 
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_QUESTION_NO, questionno);
+        outState.putBoolean(KEY_FIFTY_FIFTY, lifeline1);
+
+        if(!lifeline1) {
+            for (int i = 0; i < 4; i++) {
+                if (!button.get(i).isClickable()) {
+                    disabled.add(i);
+                }
+            }
+        }
+        outState.putIntegerArrayList(FIFTY_BUTTONS,disabled);
+        mediaPlayer.pause();
+
+    }
+
     public void play() {
 
-        new Handler().postDelayed(new Runnable(){
+        new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
 
-                for(int i=0;i<4;i++)
+                for (int i = 0; i < 4; i++)
                     button.get(i).setBackgroundResource(R.drawable.button);
 
 
             }
         }, (long) SPLASH_TIME_OUT);
 
-        if(questionno!=10) {
-            questiontext.setText("Question-"+(questionno + 1));
+        if (questionno != 10) {
+
+            questiontext.setText("Question-" + (questionno + 1));
             question.setText(questions[questionno]);
             button1.setText(options[questionno][0]);
             button2.setText(options[questionno][1]);
@@ -112,10 +158,9 @@ public class Game extends AppCompatActivity {
             button4.setText(options[questionno][3]);
 
         }
-        if(questionno>=10)
-        {
-            Intent intent = new Intent(this,Won.class);
-            intent.putExtra("name",name);
+        if (questionno >= 10) {
+            Intent intent = new Intent(this, Won.class);
+            intent.putExtra("name", name);
             mediaPlayer.stop();
             startActivity(intent);
         }
@@ -124,24 +169,22 @@ public class Game extends AppCompatActivity {
     public void button1clicked(View view) {
 
 
-            checkanswer(1, view);
-
-
+        checkanswer(1, view);
 
 
     }
 
     public void button2clicked(View view) {
 
-          //  able(2);
-            checkanswer(2, view);
+        //  able(2);
+        checkanswer(2, view);
 
     }
 
     public void button3clicked(View view) {
 
-            //able(3);
-            checkanswer(3, view);
+        //able(3);
+        checkanswer(3, view);
 
 
     }
@@ -149,39 +192,27 @@ public class Game extends AppCompatActivity {
     public void button4clicked(View view) {
 
 
-            checkanswer(4, view);
+        checkanswer(4, view);
 
     }
-
-//    public void able(int id) {
-//        int i = 0;
-//        while (i != 4 && i != id - 1) {
-//            button.get(i).setEnabled(false);
-//            button.get(i).setClickable(false);
-//            i++;
-//        }
-//    }
-
 
 
     public void fiftyclicked(View view) {
 
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
-        if(lifeline1) {
-            lifeline1=false;
+        if (lifeline1) {
+            lifeline1 = false;
             int q = questionno;
             int id = answers[q][1];
-            int i = 0;
+            int i ;
             int disabled = 0;
             fifty.setImageResource(R.drawable.redfifty);
             fifty.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
 
             Snackbar.make(view, " 50-50  Activated", Snackbar.LENGTH_LONG).show();
-            for(i=0;i<4;i++)
-            {
-                if(i!=id-1 && disabled!=2)
-                {
+            for (i = 0; i < 4; i++) {
+                if (i != id - 1 && disabled != 2) {
                     button.get(i).setText(" ");
                     button.get(i).setClickable(false);
                     button.get(i).setEnabled(false);
@@ -190,13 +221,11 @@ public class Game extends AppCompatActivity {
                 }
             }
 
-        }
-        else
-        {
+        } else {
 
 
             mediaPlayer.start();
-            Snackbar.make(view,"50-50 Already used",Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "50-50 Already used", Snackbar.LENGTH_LONG).show();
         }
 
     }
@@ -210,18 +239,14 @@ public class Game extends AppCompatActivity {
             Snackbar.make(view, "DoubleDip already used", Snackbar.LENGTH_LONG).show();
 
         } else {
-            for(int i=0;i<4;i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 button.get(i).setEnabled(true);
                 button.get(i).setClickable(true);
             }
-            Snackbar.make(view,"Double Dip Activated",Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Double Dip Activated", Snackbar.LENGTH_LONG).show();
             doubledip.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
             lifeline2 = false;
             chances += 1;
-
-
-
 
 
         }
@@ -236,14 +261,13 @@ public class Game extends AppCompatActivity {
             if (id == answers[q][1]) {
 
                 Snackbar.make(view, "Right Answer!!!", Snackbar.LENGTH_SHORT).show();
-                button.get(id-1).setBackgroundResource(R.drawable.green);
-                for(int i=0;i<4;i++)
-                {
+                button.get(id - 1).setBackgroundResource(R.drawable.green);
+                for (int i = 0; i < 4; i++) {
 
                     button.get(i).setEnabled(true);
                     button.get(i).setClickable(true);
                 }
-                questionno+=1;
+                questionno += 1;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -252,25 +276,22 @@ public class Game extends AppCompatActivity {
 
 
                     }
-                },next);
-
-
-
+                }, next);
 
 
             } else {
                 Snackbar.make(view, "Wrong Answer!!!", Snackbar.LENGTH_SHORT).show();
-                button.get(id - 1).setBackgroundResource(R.drawable.red);
+                button.get(id - 1).setBackgroundResource(red);
                 int realid = answers[q][1];
-                for(int i=0;i<4;i++)
-                {
+                for (int i = 0; i < 4; i++) {
 
                     button.get(i).setEnabled(true);
                     button.get(i).setClickable(true);
                 }
                 button.get(realid - 1).setBackgroundResource(R.drawable.green);
                 Intent intent = new Intent(this, eliminated.class);
-                intent.putExtra("name",name);
+                normalState();
+                intent.putExtra("name", name);
                 mediaPlayer.stop();
                 startActivity(intent);
 
@@ -279,20 +300,19 @@ public class Game extends AppCompatActivity {
         }
         if (chances == 2) {
 
-            chances-=1;
+            chances -= 1;
 
             if (id == answers[q][1]) {
 
                 Snackbar.make(view, "Right Answer!!!", Snackbar.LENGTH_SHORT).show();
-                button.get(id-1).setBackgroundResource(R.drawable.green);
+                button.get(id - 1).setBackgroundResource(R.drawable.green);
 
-                for(int i=0;i<4;i++)
-                {
+                for (int i = 0; i < 4; i++) {
 
                     button.get(i).setEnabled(true);
                     button.get(i).setClickable(true);
                 }
-                questionno+=1;
+                questionno += 1;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -301,18 +321,25 @@ public class Game extends AppCompatActivity {
 
 
                     }
-                },next);
+                }, next);
 
 
             } else {
                 Snackbar.make(view, "You have one more chance!!!", Snackbar.LENGTH_SHORT).show();
-                button.get(id - 1).setBackgroundResource(R.drawable.red);
-                button.get(id-1).setEnabled(false);
-                button.get(id-1).setClickable(false);
+                button.get(id - 1).setBackgroundResource(red);
+                button.get(id - 1).setEnabled(false);
+                button.get(id - 1).setClickable(false);
 
 
             }
         }
+    }
+
+    public void normalState() {
+        questionno = 0;
+        lifeline1 = true;
+        lifeline2 = true;
+
     }
 
 
