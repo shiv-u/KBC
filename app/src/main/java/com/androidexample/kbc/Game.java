@@ -25,8 +25,6 @@ public class Game extends AppCompatActivity {
     private static final String KEY_FIFTY_FIFTY = "fifty";
     private static final String KEY_DIP = "dip";
     private static  final String FIFTY_BUTTONS = "fifty_buttons";
-    private static  final String DIP_BUTTONS = "dip_buttons";
-    private boolean savedInstance= false;
 
     private ArrayList<Integer> disabled;
     boolean quizover = false;
@@ -95,6 +93,7 @@ public class Game extends AppCompatActivity {
         if (savedInstanceState != null) {
             questionno = savedInstanceState.getInt(KEY_QUESTION_NO);
             lifeline1 = savedInstanceState.getBoolean(KEY_FIFTY_FIFTY);
+            lifeline2=savedInstanceState.getBoolean(KEY_DIP);
 
             disabled = savedInstanceState.getIntegerArrayList(FIFTY_BUTTONS);
             if (!lifeline1) {
@@ -106,6 +105,14 @@ public class Game extends AppCompatActivity {
                 fifty.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
 
 
+            }
+            if(!lifeline2)
+            {
+                doubledip.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+            }
+            else
+            {
+                doubledip.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
             }
 
             mediaPlayer.start();
@@ -121,6 +128,7 @@ public class Game extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_QUESTION_NO, questionno);
         outState.putBoolean(KEY_FIFTY_FIFTY, lifeline1);
+        outState.putBoolean(KEY_DIP,lifeline2);
 
         if(!lifeline1) {
             for (int i = 0; i < 4; i++) {
